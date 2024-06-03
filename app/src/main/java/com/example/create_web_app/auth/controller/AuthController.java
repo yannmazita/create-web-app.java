@@ -1,4 +1,4 @@
-package com.example.create_web_app.auth;
+package com.example.create_web_app.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

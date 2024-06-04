@@ -6,19 +6,19 @@ import com.example.create_web_app.auth.model.Token;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
 
-    private String createAccessToken(Map<String, Object> claims, String username) {
-        Jwts.builder()
-                .setClaims(claims)
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(System.getenv("SECRET_KEY"), SignatureAlgorithm.ES256).compact();
+    private String createAccessToken(Map<String, Object> data, long expiresDelta) {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+
+        long nowTime = System.currentTimeMillis();
+        Date now = new Date(nowTime);
+
+        return "";
     }
 
     public Token loginForAccessToken(AuthDto authDto) {

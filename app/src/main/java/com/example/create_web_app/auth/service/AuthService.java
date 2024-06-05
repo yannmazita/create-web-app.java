@@ -3,22 +3,31 @@ package com.example.create_web_app.auth.service;
 import com.example.create_web_app.auth.dto.AuthDto;
 import com.example.create_web_app.auth.model.Token;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.MacAlgorithm;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
 
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.stereotype.Service;
+import javax.crypto.SecretKey;
 
-@Service
 public class AuthService {
 
     private String createAccessToken(Map<String, Object> data, long expiresDelta) {
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
         long nowTime = System.currentTimeMillis();
         Date now = new Date(nowTime);
 
-        return "";
+        Password key = Keys.password(System.getenv("SECRET_KEY").toCharArray());
+
+        // Depending on key length, either HS256, HS384 or HS512 will be used
+        String jws = Jwts.builder()
+                .subject(data.get("sub").toString())
+                .scopes(data.get("scopes").toString())
+                .signWith(key)
+                .compact();
+        return jws;
     }
 
     public Token loginForAccessToken(AuthDto authDto) {

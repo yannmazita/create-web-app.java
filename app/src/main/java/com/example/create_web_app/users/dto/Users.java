@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-class Users {
+public class Users {
     private List<UserRead> users;
     private int total;
 }

@@ -9,11 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.example.create_web_app.auth.dto.AuthDto;
-import com.example.create_web_app.auth.model.Token;
-import com.example.create_web_app.auth.model.TokenData;
+import com.example.create_web_app.auth.dto.Token;
+import com.example.create_web_app.auth.dto.TokenData;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -45,12 +46,18 @@ public class AuthService {
         try {
             return Jwts
                     .parser()
+                    .clockSkewSeconds(180)
                     .verifyWith(this.key)
                     .build()
                     .parseSignedClaims(token);
         } catch (JwtException exception) {
             throw new JwtException("Invalid Token");
         }
+    }
+
+    public <T> T extractClaim(String token, Function<Jws<Claims>, T> claimsResolver) {
+        final Jws<Claims> claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

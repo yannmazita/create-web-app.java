@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.create_web_app.auth.dto.AuthDto;
+import com.example.create_web_app.auth.dto.Token;
 import com.example.create_web_app.auth.service.AuthService;
-import com.example.create_web_app.auth.model.Token;
 
 @RestController
 public class AuthController {

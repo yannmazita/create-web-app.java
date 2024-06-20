@@ -10,12 +10,22 @@ import com.example.create_web_app.auth.dto.AuthDto;
 import com.example.create_web_app.auth.dto.Token;
 import com.example.create_web_app.auth.service.AuthService;
 
+/**
+ * The AuthController class is responsible for handling the authentication
+ * requests.
+ */
 @RestController
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
+    /**
+     * The login method is used to authenticate the user.
+     * 
+     * @param authDto the authentication details
+     * @return Token
+     */
     @PostMapping("/login")
     public Token login(@RequestBody AuthDto authDto) {
         Authentication authentication = AuthenticationManager
@@ -28,6 +38,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * The register method is used to register a new user.
+     * 
+     * @param authDto the authentication details
+     * @return Token
+     */
     @PostMapping("/register")
     public Token register(@RequestBody AuthDto authDto) {
         Token token = new Token();

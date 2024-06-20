@@ -9,14 +9,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * The CustomUserDetails class is responsible for fetching user details from the
+ * database.
+ */
 public class CustomUserDetails implements UserDetails {
 
+    /**
+     * The user field is used to store the user details.
+     */
     private final User user;
 
+    /**
+     * The CustomUserDetails constructor is used to create an instance of the
+     * CustomUserDetails class.
+     * 
+     * @param user the user details
+     */
     public CustomUserDetails(User user) {
         this.user = user;
     }
 
+    /**
+     * The getAuthorities method is used to get the authorities of the user.
+     * 
+     * @return the authorities
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         /*
@@ -33,6 +51,11 @@ public class CustomUserDetails implements UserDetails {
         return authorities;
     }
 
+    /**
+     * The getPassword method is used to get the hashed password of the user.
+     * 
+     * @return the user's hashed password
+     */
     @Override
     public String getPassword() {
         return this.user.getHashedPassword();
@@ -41,25 +64,5 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return this.user.getUsername();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

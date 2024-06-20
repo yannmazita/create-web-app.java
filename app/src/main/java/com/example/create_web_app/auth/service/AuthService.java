@@ -1,20 +1,11 @@
 package com.example.create_web_app.auth.service;
 
-import java.security.Key;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import com.example.create_web_app.auth.dto.AuthDto;
-import com.example.create_web_app.auth.dto.Token;
-import com.example.create_web_app.auth.dto.TokenData;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -55,9 +46,19 @@ public class AuthService {
         }
     }
 
-    public <T> T extractClaim(String token, Function<Jws<Claims>, T> claimsResolver) {
-        final Jws<Claims> claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+    private Boolean isTokenExpired(String token) {
+        final Claims claims = extractAllClaims(token).getPayload();
+        return claims.getExpiration().before(new Date());
+    }
+
+    public String extractUsername(String token) {
+        final Claims claims = extractAllClaims(token).getPayload();
+        return claims.getSubject();
+    }
+
+    public String extractScopes(String token) {
+        final Claims claims = extractAllClaims(token).getPayload();
+        return claims.get("scopes").toString();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

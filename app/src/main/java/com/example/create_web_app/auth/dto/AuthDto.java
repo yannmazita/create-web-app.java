@@ -1,14 +1,13 @@
 package com.example.create_web_app.auth.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+/**
+ * The AuthDto class is used to store the authentication details.
+ */
 @Data
 public class AuthDto {
 
-    @NotNull
     private String username;
-
-    @NotNull
     private String password;
 }

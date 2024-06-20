@@ -1,4 +1,4 @@
-package com.example.create_web_app.auth.model;
+package com.example.create_web_app.auth.dto;
 
 import lombok.Data;
 

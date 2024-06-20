@@ -1,6 +1,6 @@
 package com.example.create_web_app.auth.service;
 
-import com.example.create_web_app.auth.model.CustomUserDetails;
+import com.example.create_web_app.auth.dto.CustomUserDetails;
 import com.example.create_web_app.users.model.User;
 import com.example.create_web_app.users.repo.UserRepository;
 
@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
-
     @Autowired
     private UserRepository userRepository;
 
@@ -23,10 +21,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = this.userRepository.findByUsername(username);
 
         if (user == null) {
-            logger.error("Username not found: ");
             throw new UsernameNotFoundException("Couldn't find user for authentication");
         }
-        logger.info("User " + username + " has been authenticated.");
         return new CustomUserDetails(user);
     }
 }

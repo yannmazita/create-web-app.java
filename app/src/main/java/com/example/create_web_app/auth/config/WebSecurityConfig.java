@@ -1,4 +1,4 @@
-package com.example.create_web_app.auth.util;
+package com.example.create_web_app.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,21 +18,22 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.create_web_app.auth.service.CustomUserDetailsService;
+import com.example.create_web_app.auth.util.AuthFilter;
 
 /**
- * The SecurityConfig class is responsible for configuring the security settings
- * of the application.
+ * The SecurityConfig class is responsible for configuring the security settings,
+ * authentication and authorization rules of the application.
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class WebSecurityConfig {
 
     /**
      * The authFilter field is used to filter the authentication requests.
      */
     @Autowired
-    private AuthFilter authFilter;
+    AuthFilter authFilter;
 
     /**
      * The userDetailsService method is used to create a user details service.
@@ -45,18 +46,19 @@ public class SecurityConfig {
     }
 
     /**
-     * The securityFilterChain method is used to create a security filter chain.
-     * 
+     * The filterChain method is used to create a security filter chain.
+     *
+     * The method configures several security settings.
      * @param http the HttpSecurity object
      * @return SecurityFilterChain
      * @throws Exception
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/register").permitAll()
                         .requestMatchers("/**").authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

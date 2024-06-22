@@ -48,7 +48,10 @@ public class WebSecurityConfig {
     /**
      * The filterChain method is used to create a security filter chain.
      *
-     * The method configures several security settings.
+     * The method configures several security settings. /login and /register request are open,
+     * other requests need authentication. Sessions are not used. AuthFilter
+     * is used to filter authentication requests (processing JWT tokens and authenticating
+     * users.
      * @param http the HttpSecurity object
      * @return SecurityFilterChain
      * @throws Exception

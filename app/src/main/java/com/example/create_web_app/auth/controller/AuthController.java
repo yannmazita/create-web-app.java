@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.create_web_app.auth.dto.AuthDto;
 import com.example.create_web_app.auth.dto.Token;
 import com.example.create_web_app.auth.service.AuthService;
+import com.example.create_web_app.auth.config.WebSecurityConfig;
 
 /**
  * The AuthController class is responsible for handling the authentication
@@ -28,7 +29,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     public Token login(@RequestBody AuthDto authDto) {
-        Authentication authentication = AuthenticationManager
+        Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(authDto.getUsername(), authDto.getPassword()));
         if (authentication.isAuthenticated()) {
             Token token = new Token();

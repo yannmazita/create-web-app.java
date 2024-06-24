@@ -1,16 +1,22 @@
 package com.example.create_web_app.auth.service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
+
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 
 /**
  * The AuthService class is responsible for generating and validating JWT
@@ -46,5 +52,37 @@ public class AuthService {
 
         String accessToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         return accessToken;
+    }
+
+    private JWTClaimsSet extractClaims(String token) {
+        SignedJWT signedJWT;
+        try {
+            signedJWT = SignedJWT.parse(token);
+            return signedJWT.getJWTClaimsSet();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private boolean isTokenExpired(String token) {
+        JWTClaimsSet claims = extractClaims(token);
+        return claims.getExpirationTime().before(new Date());
+    }
+
+    public String extractUsername(String token) {
+        JWTClaimsSet claims = extractClaims(token);
+        return claims.getSubject();
+    }
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        String username = extractUsername(token);
+        SignedJWT signedJWT;
+        try {
+            signedJWT = SignedJWT.parse(token);
+        } catch (ParseException e) {
+            return false;
+        }
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 }

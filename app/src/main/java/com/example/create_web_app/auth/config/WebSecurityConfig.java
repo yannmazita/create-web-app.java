@@ -1,6 +1,7 @@
 package com.example.create_web_app.auth.config;
 
-import java.security.AuthProvider;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,25 +10,25 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.create_web_app.auth.service.CustomUserDetailsService;
-import com.example.create_web_app.auth.util.AuthFilter;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 
 /**
- * The SecurityConfig class is responsible for configuring the security
+ * The WebSecurityConfig class is responsible for configuring the security
  * settings,
  * authentication and authorization rules of the application.
  */
@@ -36,17 +37,22 @@ import com.example.create_web_app.auth.util.AuthFilter;
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
+    private SecretKey secretKey = new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), "HmacSHA256");
+
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withSecretKey(secretKey);
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey).build();
+        return jwtDecoder;
     }
 
     @Bean
     JwtEncoder jwtEncoder() {
-
+        JWKSource<SecurityContext> secret = new ImmutableSecret<SecurityContext>(secretKey);
+        NimbusJwtEncoder jwtEncoder = new NimbusJwtEncoder(secret);
+        return jwtEncoder;
     }
 
     /**
@@ -63,7 +69,7 @@ public class WebSecurityConfig {
     public AuthenticationManager authManager() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authenticationProvider);
     }
 

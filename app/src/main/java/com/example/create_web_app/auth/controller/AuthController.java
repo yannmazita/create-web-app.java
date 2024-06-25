@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.create_web_app.auth.dto.AuthDto;
-import com.example.create_web_app.auth.dto.CustomUserDetails;
 import com.example.create_web_app.auth.dto.Token;
 import com.example.create_web_app.auth.service.AuthService;
 
@@ -32,7 +31,6 @@ public class AuthController {
                         authDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Token token = new Token();
         token.setAccessToken(authService.generateAccessToken(authentication));
         token.setTokenType("Bearer");

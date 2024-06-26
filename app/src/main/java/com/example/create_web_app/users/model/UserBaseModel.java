@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @MappedSuperclass
-public abstract class UserBase {
+abstract class UserBaseModel {
     @Column(unique = true, nullable = false)
     private String username;
 }

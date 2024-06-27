@@ -38,7 +38,13 @@ public class AuthService {
         long expire = Long.parseLong(System.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")) * 1000 * 60;
         Instant access_token_expires = now.plus(expire, ChronoUnit.MINUTES);
 
-        String scope = authentication.getAuthorities()
+        /**
+         * Update this part when implementing user registration. Unregistered users
+         * won't be able to authenticate since they have no account.
+         * Check if relationship between UserDetails.getAuthorities
+         * and Authentication.getAuthorities.
+         */
+        String scopes = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
@@ -47,7 +53,7 @@ public class AuthService {
                 .issuedAt(now)
                 .expiresAt(access_token_expires)
                 .subject(authentication.getName())
-                .claim("scopes", scope)
+                .claim("scopes", scopes)
                 .build();
 
         String accessToken = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
@@ -73,6 +79,11 @@ public class AuthService {
     public String extractUsername(String token) {
         JWTClaimsSet claims = extractClaims(token);
         return claims.getSubject();
+    }
+
+    public String extractScopes(String token) {
+        JWTClaimsSet claims = extractClaims(token);
+        return claims.getClaim("scopes").toString();
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

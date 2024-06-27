@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "user")
-public class User extends UserBase {
+public class User extends UserBaseModel {
     @Id
     @GeneratedValue()
     private UUID id;

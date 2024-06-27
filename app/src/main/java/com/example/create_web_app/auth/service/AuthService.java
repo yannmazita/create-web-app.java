@@ -41,8 +41,6 @@ public class AuthService {
         /**
          * Update this part when implementing user registration. Unregistered users
          * won't be able to authenticate since they have no account.
-         * Check if relationship between UserDetails.getAuthorities
-         * and Authentication.getAuthorities.
          */
         String scopes = authentication.getAuthorities()
                 .stream()

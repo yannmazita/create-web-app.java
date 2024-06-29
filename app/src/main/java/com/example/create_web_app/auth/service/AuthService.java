@@ -19,8 +19,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 /**
- * The AuthService class is responsible for generating and validating JWT
- * tokens.
+ * Service class for token-related operations.
  */
 @Component
 public class AuthService {
@@ -28,20 +27,16 @@ public class AuthService {
     private JwtEncoder jwtEncoder;
 
     /**
-     * The generateAccessToken method is used to generate an access token.
+     * Generates an access Token.
      * 
-     * @param authentication the authentication
-     * @return the access token
+     * @param authentication Authentication object for authenticated users.
+     * @return the access token.
      */
     public String generateAccessToken(Authentication authentication) {
         Instant now = Instant.now();
         long expire = Long.parseLong(System.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")) * 1000 * 60;
         Instant access_token_expires = now.plus(expire, ChronoUnit.MINUTES);
 
-        /**
-         * Update this part when implementing user registration. Unregistered users
-         * won't be able to authenticate since they have no account.
-         */
         String scopes = authentication.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -58,6 +53,12 @@ public class AuthService {
         return accessToken;
     }
 
+    /**
+     * Extracts all claims from a token.
+     * 
+     * @param token the token extract claims from.
+     * @return the claims.
+     */
     private JWTClaimsSet extractClaims(String token) {
         SignedJWT signedJWT;
         try {
@@ -69,21 +70,46 @@ public class AuthService {
         return null;
     }
 
+    /**
+     * Checks if a token is expired.
+     * 
+     * @param token the token to check.
+     * @return true if the token is expired, false otherwise.
+     */
     private boolean isTokenExpired(String token) {
         JWTClaimsSet claims = extractClaims(token);
         return claims.getExpirationTime().before(new Date());
     }
 
+    /**
+     * Extracts the username from a token.
+     * 
+     * @param token the token to extract the username from.
+     * @return the username.
+     */
     public String extractUsername(String token) {
         JWTClaimsSet claims = extractClaims(token);
         return claims.getSubject();
     }
 
+    /**
+     * Extracts the scopes from a token.
+     * 
+     * @param token the token to extract the scopes from.
+     * @return the scopes.
+     */
     public String extractScopes(String token) {
         JWTClaimsSet claims = extractClaims(token);
         return claims.getClaim("scopes").toString();
     }
 
+    /**
+     * Validates a token.
+     * 
+     * @param token       the token to validate.
+     * @param userDetails the user details to validate the token against.
+     * @return true if the token is valid, false otherwise.
+     */
     public boolean validateToken(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         SignedJWT signedJWT;

@@ -7,10 +7,19 @@ import com.example.create_web_app.users.dto.UserCreate;
 import com.example.create_web_app.users.dto.UserRead;
 import com.example.create_web_app.users.model.User;
 
+/**
+ * Utility class for user-related operations.
+ */
 public class UserUtils {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Converts a user DTO to a User entity.
+     * 
+     * @param data user data.
+     * @return User entity.
+     */
     public User convertToUser(UserCreate data) {
         User user = new User();
         user.setUsername(data.getUsername());
@@ -18,6 +27,12 @@ public class UserUtils {
         return user;
     }
 
+    /**
+     * Converts a User entity to a user DTO.
+     * 
+     * @param data user data.
+     * @return UserRead DTO.
+     */
     public UserRead convertToUserRead(User data) {
         UserRead userRead = new UserRead();
         userRead.setId(data.getId());

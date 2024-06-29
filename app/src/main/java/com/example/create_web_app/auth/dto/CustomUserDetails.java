@@ -10,21 +10,28 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * The CustomUserDetails class is responsible for fetching user details from the
- * database.
+ * Stores user details.
  */
 public class CustomUserDetails implements UserDetails {
 
+    /**
+     * User object.
+     */
     private final User user;
 
+    /**
+     * Constructor for CustomUserDetails.
+     * 
+     * @param user the user object.
+     */
     public CustomUserDetails(User user) {
         this.user = user;
     }
 
     /**
-     * The getAuthorities method is used to get the authorities of the user.
+     * Gets all the roles granted to the user.
      * 
-     * @return the authorities
+     * @return the roles granted.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -43,9 +50,9 @@ public class CustomUserDetails implements UserDetails {
     }
 
     /**
-     * The getPassword method is used to get the hashed password of the user.
+     * Gets the hashed password of the user.
      * 
-     * @return the user's hashed password
+     * @return the hashed password.
      */
     @Override
     public String getPassword() {
@@ -53,30 +60,50 @@ public class CustomUserDetails implements UserDetails {
     }
 
     /**
-     * The getUsername method is used to get the username of the user.
+     * Gets the username of the user.
      * 
-     * @return the user's username
+     * @return the username.
      */
     @Override
     public String getUsername() {
         return this.user.getUsername();
     }
 
+    /**
+     * Checks if the user account is not expired.
+     * 
+     * @return true if the account is not expired, false otherwise.
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * Checks if the user account is not locked.
+     * 
+     * @return true if the account is not locked, false otherwise.
+     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    /**
+     * Checks if the user credentials are not expired.
+     * 
+     * @return true if the credentials are not expired, false otherwise.
+     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    /**
+     * Checks if the user is enabled.
+     * 
+     * @return true if the user is enabled, false otherwise.
+     */
     @Override
     public boolean isEnabled() {
         return true;

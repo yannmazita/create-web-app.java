@@ -12,8 +12,7 @@ import com.example.create_web_app.auth.dto.Token;
 import com.example.create_web_app.auth.service.AuthService;
 
 /**
- * The AuthController class is responsible for handling the authentication
- * requests.
+ * Handles authentication requests.
  */
 @RestController
 public class AuthController {

@@ -29,29 +29,44 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
 /**
- * The WebSecurityConfig class is responsible for configuring the security
- * settings,
- * authentication and authorization rules of the application.
+ * Configures the security settings, authentication and
+ * authorization rules of the application.
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
     private SecretKey secretKey = new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), "HmacSHA256");
 
+    /**
+     * Authentication filter dependency used for every request.
+     */
     @Autowired
     AuthFilter authFilter;
 
+    /**
+     * User details service dependency used for fetching user details.
+     */
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    /**
+     * Decoder used to decode tokens using a secret key.
+     * 
+     * @return JwtDecoder
+     */
     @Bean
     public JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(secretKey).build();
         return jwtDecoder;
     }
 
+    /**
+     * Encodere used to encode tokens using a secret key.
+     * 
+     * @return JwtEncoder
+     */
     @Bean
     JwtEncoder jwtEncoder() {
         JWKSource<SecurityContext> secret = new ImmutableSecret<SecurityContext>(secretKey);
@@ -60,7 +75,7 @@ public class WebSecurityConfig {
     }
 
     /**
-     * The passwordEncoder method is used to create a password encoder.
+     * Password encoder used to encode passwords.
      * 
      * @return PasswordEncoder
      */
@@ -69,6 +84,15 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Creates an authentication manager.
+     *
+     * This method uses DaoAuthenticationProvider which is an implementation of
+     * AuthenticationProvider and sets up said provider with a UserDetailsService and
+     * a password encoder.
+     * 
+     * @return ProviderManager which implements AuthenticationManager
+     */
     @Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -82,7 +106,7 @@ public class WebSecurityConfig {
      *
      * The method configures several security settings. /login and /register request
      * are open,
-     * other requests need authentication. Sessions are not used.
+     * other requests need authentication. CSRF is disabled. Sessions are not used.
      * 
      * @param http the HttpSecurity object
      * @return SecurityFilterChain
@@ -95,6 +119,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/**").authenticated())
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwtoken -> jwtoken.decoder(jwtDecoder())))

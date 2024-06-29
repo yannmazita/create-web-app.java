@@ -24,6 +24,9 @@ import com.example.create_web_app.users.repo.UserRepository;
 import com.example.create_web_app.users.service.UserService;
 import com.example.create_web_app.users.util.UserUtils;
 
+/**
+ * Handles user-related requests.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {

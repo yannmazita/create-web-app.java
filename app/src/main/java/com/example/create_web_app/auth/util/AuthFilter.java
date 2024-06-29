@@ -19,31 +19,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * The AuthFilter class is responsible for filtering the authentication
- * requests.
+ * Authentication filter class.
  */
 @Component
 public class AuthFilter extends OncePerRequestFilter {
 
-    /**
-     * The authService field is used to access the authentication service.
-     */
     @Autowired
     private AuthService authService;
 
-    /**
-     * The customUserDetailsService field is used to access the custom user details
-     * service.
-     */
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
     /**
-     * The doFilterInternal method is used to filter the authentication requests.
+     * Filters authentication requests.
      * 
-     * @param request     the HTTP request
-     * @param response    the HTTP response
-     * @param filterChain the filter chain
+     * @param request     the HTTP request.
+     * @param response    the HTTP response.
+     * @param filterChain the filter chain.
      * @throws ServletException
      * @throws IOException
      */

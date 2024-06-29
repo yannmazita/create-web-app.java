@@ -82,7 +82,7 @@ public class WebSecurityConfig {
      *
      * The method configures several security settings. /login and /register request
      * are open,
-     * other requests need authentication. Sessions are not used.
+     * other requests need authentication. CSRF is disabled. Sessions are not used.
      * 
      * @param http the HttpSecurity object
      * @return SecurityFilterChain
@@ -95,6 +95,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/**").authenticated())
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwtoken -> jwtoken.decoder(jwtDecoder())))

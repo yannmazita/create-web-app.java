@@ -6,6 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -42,7 +43,7 @@ public class WebSecurityConfig {
     private final CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(AuthFilter authFilter, CustomUserDetailsService userDetailsService) {
+    public WebSecurityConfig(@Lazy AuthFilter authFilter, CustomUserDetailsService userDetailsService) {
         this.authFilter = authFilter;
         this.userDetailsService = userDetailsService;
     }

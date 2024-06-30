@@ -11,8 +11,13 @@ import com.example.create_web_app.users.model.User;
  * Utility class for user-related operations.
  */
 public class UserUtils {
+
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserUtils(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     /**
      * Converts a user DTO to a User entity.

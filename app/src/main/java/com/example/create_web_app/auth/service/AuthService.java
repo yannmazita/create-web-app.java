@@ -23,8 +23,13 @@ import com.nimbusds.jwt.SignedJWT;
  */
 @Component
 public class AuthService {
+    
+    private final JwtEncoder jwtEncoder;
+
     @Autowired
-    private JwtEncoder jwtEncoder;
+    public AuthService(JwtEncoder jwtEncoder) {
+        this.jwtEncoder = jwtEncoder;
+    }
 
     /**
      * Generates an access Token.

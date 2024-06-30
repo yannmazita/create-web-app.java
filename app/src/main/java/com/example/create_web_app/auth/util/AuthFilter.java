@@ -24,11 +24,15 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class AuthFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final CustomUserDetailsService customUserDetailsService;
+
 
     @Autowired
-    CustomUserDetailsService customUserDetailsService;
+    public AuthFilter(AuthService authService, CustomUserDetailsService customUserDetailsService) {
+        this.authService = authService;
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     /**
      * Filters authentication requests.

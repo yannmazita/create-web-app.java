@@ -31,14 +31,16 @@ import com.example.create_web_app.users.util.UserUtils;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final UserUtils userUtils;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserUtils userUtils;
+    public UserController(UserService userService, UserRepository userRepository, UserUtils userUtils) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.userUtils = userUtils;
+    }
 
     @PreAuthorize("hasRole('admin')")
     @PostMapping

@@ -3,6 +3,7 @@ package com.example.create_web_app.auth.util;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,11 +25,15 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class AuthFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final CustomUserDetailsService customUserDetailsService;
+
 
     @Autowired
-    CustomUserDetailsService customUserDetailsService;
+    public AuthFilter(@Lazy AuthService authService, CustomUserDetailsService customUserDetailsService) {
+        this.authService = authService;
+        this.customUserDetailsService = customUserDetailsService;
+    }
 
     /**
      * Filters authentication requests.

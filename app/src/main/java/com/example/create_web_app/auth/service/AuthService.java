@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +24,13 @@ import com.nimbusds.jwt.SignedJWT;
  */
 @Component
 public class AuthService {
+    
+    private final JwtEncoder jwtEncoder;
+
     @Autowired
-    private JwtEncoder jwtEncoder;
+    public AuthService(@Lazy JwtEncoder jwtEncoder) {
+        this.jwtEncoder = jwtEncoder;
+    }
 
     /**
      * Generates an access Token.

@@ -2,6 +2,7 @@ package com.example.create_web_app.users.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import com.example.create_web_app.users.dto.UserCreate;
 import com.example.create_web_app.users.dto.UserRead;
@@ -10,9 +11,15 @@ import com.example.create_web_app.users.model.User;
 /**
  * Utility class for user-related operations.
  */
+@Component
 public class UserUtils {
+
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserUtils(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     /**
      * Converts a user DTO to a User entity.

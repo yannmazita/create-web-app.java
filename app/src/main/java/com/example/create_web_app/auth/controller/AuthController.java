@@ -17,11 +17,14 @@ import com.example.create_web_app.auth.service.AuthService;
 @RestController
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    public AuthController(AuthService authService, AuthenticationManager authenticationManager) {
+        this.authService = authService;
+        this.authenticationManager = authenticationManager;
+    }
 
     public Token login(@RequestBody AuthDto authDto) throws IllegalAccessException {
         Authentication authentication = authenticationManager

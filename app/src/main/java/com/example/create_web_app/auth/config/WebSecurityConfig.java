@@ -6,6 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -37,19 +38,15 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
-    private SecretKey secretKey = new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), "HmacSHA256");
+    private final SecretKey secretKey = new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), "HmacSHA256");
+    private final AuthFilter authFilter;
+    private final CustomUserDetailsService userDetailsService;
 
-    /**
-     * Authentication filter dependency used for every request.
-     */
     @Autowired
-    AuthFilter authFilter;
-
-    /**
-     * User details service dependency used for fetching user details.
-     */
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    public WebSecurityConfig(@Lazy AuthFilter authFilter, CustomUserDetailsService userDetailsService) {
+        this.authFilter = authFilter;
+        this.userDetailsService = userDetailsService;
+    }
 
     /**
      * Decoder used to decode tokens using a secret key.
@@ -88,7 +85,8 @@ public class WebSecurityConfig {
      * Creates an authentication manager.
      *
      * This method uses DaoAuthenticationProvider which is an implementation of
-     * AuthenticationProvider and sets up said provider with a UserDetailsService and
+     * AuthenticationProvider and sets up said provider with a UserDetailsService
+     * and
      * a password encoder.
      * 
      * @return ProviderManager which implements AuthenticationManager

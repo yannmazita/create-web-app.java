@@ -26,6 +26,7 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
+    @PostMapping("/login")
     public Token login(@RequestBody AuthDto authDto) throws IllegalAccessException {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(

@@ -82,6 +82,7 @@ docker compose up -d --build frontend-dev
 
 ## To do
 - Update README with pictures
+- Backend: Implement data validation to DTO classes
 - Backend: Fix authorized controller access
 - Backend: Implement websocket routes
 - Backend: Fix production environment

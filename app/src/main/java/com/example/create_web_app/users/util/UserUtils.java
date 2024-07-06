@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import com.example.create_web_app.users.dto.UserCreate;
 import com.example.create_web_app.users.dto.UserRead;
 import com.example.create_web_app.users.model.User;
+import com.example.create_web_app.users.repo.UserRepository;
+import com.example.create_web_app.users.service.UserService;
 
 /**
  * Utility class for user-related operations.
@@ -15,10 +17,14 @@ import com.example.create_web_app.users.model.User;
 public class UserUtils {
 
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public UserUtils(PasswordEncoder passwordEncoder) {
+    public UserUtils(PasswordEncoder passwordEncoder, UserRepository userRepository, UserService userService) {
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -46,5 +52,25 @@ public class UserUtils {
         userRead.setUsername(data.getUsername());
         userRead.setRoles(data.getRoles());
         return userRead;
+    }
+
+    public void createSuperUser() {
+        User superUser = new User();
+        superUser.setUsername("admin");
+        superUser.setHashedPassword(passwordEncoder.encode("secret"));
+        superUser.setRoles("admin");
+        userRepository.save(superUser);
+    }
+
+    public void createFakeUsers() {
+        for (int i = 0; i < 40; i++) {
+            User fake_user = new User();
+            fake_user.setUsername("fake_user_" + i);
+            fake_user.setHashedPassword(passwordEncoder.encode("password"));
+            if (i % 2 == 0) {
+                fake_user.setRoles("user:own websockets");
+            }
+            userRepository.save(fake_user);
+        }
     }
 }

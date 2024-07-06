@@ -42,21 +42,21 @@ public class UserController {
         this.userUtils = userUtils;
     }
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     @PostMapping
     public UserRead createUser(@RequestBody UserCreate data) {
         UserRead newUser = userUtils.convertToUserRead(userRepository.save(userUtils.convertToUser(data)));
         return newUser;
     }
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/id/{id}")
     public UserRead getUserById(@PathVariable UUID id) {
         UserRead user = userUtils.convertToUserRead(userRepository.findById(id).orElse(null));
         return user;
     }
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/all")
     public List<UserRead> getAllUsers(@RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "0") int limit) {
@@ -64,37 +64,37 @@ public class UserController {
         return null;
     }
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     @PutMapping("/id/{id}")
     public UserRead updateUserById(@PathVariable UUID id, @RequestBody UserUpdate data) {
         return null;
     }
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     @PatchMapping("/id/{id}/username")
     public UserRead updateUserUsernameById(@PathVariable UUID id, @RequestBody UserUpdate data) {
         return null;
     }
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasAuthority('admin')")
     @PatchMapping("/id/{id}/roles")
     public UserRead updateUserRolesById(@PathVariable UUID id, @RequestBody UserUpdate data) {
         return null;
     }
 
-    @PreAuthorize("hasRole('user:own')")
+    @PreAuthorize("hasAuthority('user:own')")
     @GetMapping("/me")
     public UserRead getOwnUser() {
         return null;
     }
 
-    @PreAuthorize("hasRole('user:own')")
+    @PreAuthorize("hasAuthority('user:own')")
     @DeleteMapping("/me")
     public UserRead deleteOwnUser() {
         return null;
     }
 
-    @PreAuthorize("hasRole('user:own')")
+    @PreAuthorize("hasAuthority('user:own')")
     @PatchMapping("/me/password")
     public UserRead updateOwnPassword(@RequestBody UserUpdate data) {
         return null;
